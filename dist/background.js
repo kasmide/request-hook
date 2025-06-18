@@ -15,7 +15,7 @@ function intercept(requestDetails) {
           };
           stream.onstop = () => {
             console.log("Response data received:", data);
-            data = eval(filter.filter).responseHook(data, requestDetails);
+            data = eval(filter.filter + "\n\n({ responseHook })").responseHook(data, requestDetails);
             stream.write(encoder.encode(data));
             stream.close();
           };
@@ -30,13 +30,5 @@ browser.webRequest.onBeforeRequest.addListener(intercept, {
 }, ["blocking"]);
 
 browser.storage.local.set({
-  filters: [
-    {
-      url: "ifconfig.io",
-      filter: `responseHook = (data, requestDetails) => {
-          return data.replace(/\\d/g, "9");
-        }
-        return { responseHook };`
-    }
-  ]
+  filters: []
 });
